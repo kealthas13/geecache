@@ -1,4 +1,6 @@
-docker network create --driver bridge --subnet 188.168.0.0/24 --gateway 188.168.0.1 mynetwork
+#无需重建自定义网络
+#docker network create --driver bridge --subnet 188.168.0.0/24 --gateway 188.168.0.1 mynetwork
+
 docker compose -f "compose.yaml" up -d --build
 sleep 30
 docker logs geecache1

@@ -1,0 +1,45 @@
+version: '3'
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 188.168.0.0/24
+services:
+  node1:
+    build: ./
+    container_name: geecache1
+    ports:
+      - 127.0.0.1:9527:8088
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 188.168.0.101
+    tty: true 
+    environment:
+      - node=1
+  node2:
+    build: ./
+    container_name: geecache2
+    ports:
+      - 127.0.0.1:9528:8088
+    restart: always
+    networks:
+      mynetwork:
+        ipv4_address: 188.168.0.102  
+    tty: true 
+    environment:
+      - node=2    
+  node3:
+    build: ./
+    container_name: geecache3
+    ports:
+      - 127.0.0.1:9529:8088
+    restart: always    
+    networks:
+      mynetwork:
+        ipv4_address: 188.168.0.103
+    tty: true
+    environment:
+      - node=3
+

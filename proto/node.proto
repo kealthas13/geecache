@@ -1,0 +1,23 @@
+//约定语法
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+message Request {
+  string action = 1;
+  string key_value=2;
+  string http_value=3;
+}
+
+message Response {
+  string action = 1;
+  string key_value = 2;
+  string http_value=3;
+  int64 response=4;
+  string err=5;
+}
+
+service NodeService {
+  rpc SendAndResponse(Request) returns (Response){};       // Simple RPC
+//   rpc AssignTask(Request) returns (stream Response){};  // Server-Side RPC
+}

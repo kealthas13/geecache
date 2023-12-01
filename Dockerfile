@@ -36,7 +36,9 @@ COPY ./proto/* /root/go/src/geecache/proto/
 COPY ./run.sh /root/go/src/geecache/
 RUN go mod init geecache && go mod tidy && chmod +x /root/go/src/geecache/run.sh \
     && cd /root/go/src/geecache/proto/ && protoc --go_out=. --go-grpc_out=. node.proto
-EXPOSE 12345
+# EXPOSE 12345
+# EXPOSE 12346
+# EXPOSE 12347
 # # # # # 运行
 ENTRYPOINT ["/root/go/src/geecache/run.sh"]
 

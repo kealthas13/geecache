@@ -10,10 +10,15 @@ import (
 
 	"google.golang.org/grpc"
 )
-//其他节点的IP
+
+// 其他节点的IP
 const network01 string = "188.168.0.101:"
 const network02 string = "188.168.0.102:"
 const network03 string = "188.168.0.103:"
+const com1 string = "12345"
+const com2 string = "12346"
+const com3 string = "12347"
+const network0 string = "127.0.0.1:"
 
 type server_rpc struct {
 	pb.UnimplementedNodeServiceServer
@@ -24,15 +29,15 @@ type server_rpc struct {
 func (s *server_rpc) SendAndResponse(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 	var responses int
 	var key, value string
-	if req.Action == http.MethodPost {//POST实现
+	if req.Action == http.MethodPost { //POST实现
 
-		v := []byte(req.HttpValue) //转成byte
-		if len(req.HttpValue) != 0 {//如果value不空
+		v := []byte(req.HttpValue)   //转成byte
+		if len(req.HttpValue) != 0 { //如果value不空
 			e := s.Set(req.KeyValue, v) //存入
-			if e != nil {//异常
+			if e != nil {               //异常
 				// log.Println(e)
 				responses = http.StatusInternalServerError
-			} else {//成功
+			} else { //成功
 				responses = http.StatusOK
 			}
 		}
@@ -41,14 +46,14 @@ func (s *server_rpc) SendAndResponse(ctx context.Context, req *pb.Request) (*pb.
 		b, e := s.Get(req.KeyValue)
 		// fmt.Println(b, e)
 
-		if e != nil {//异常
+		if e != nil { //异常
 			// log.Println(e)
 			responses = http.StatusInternalServerError
 			// return
-		} else if len(b) == 0 {//没找到
+		} else if len(b) == 0 { //没找到
 			responses = http.StatusNotFound
 			// return
-		} else {//成功
+		} else { //成功
 			value = string(b)
 			responses = http.StatusOK
 		}
@@ -56,36 +61,41 @@ func (s *server_rpc) SendAndResponse(ctx context.Context, req *pb.Request) (*pb.
 	} else if req.Action == http.MethodDelete {
 		//DEL实现
 		b, _ := s.Get(req.KeyValue)
-		responses = http.StatusOK//永远返回HTTP 200
-		if len(b) != 0 {//存在
+		responses = http.StatusOK //永远返回HTTP 200
+		if len(b) != 0 {          //存在
 			value = "1"
 			_ = s.Del(req.KeyValue)
-		} else {//不存在
+		} else { //不存在
 			value = "0"
 		}
 	}
-	return &pb.Response{Action: req.Action, KeyValue: key, HttpValue: value, Response: int64(responses)}, nil//调用返回
+	return &pb.Response{Action: req.Action, KeyValue: key, HttpValue: value, Response: int64(responses)}, nil //调用返回
 }
-//创建gRPC服务端
+
+// 创建gRPC服务端
 func New_RPC(node int, c cache.Cache) {
-	var network string
+	var network, com string
+	// network := network0
 	//选择本地ip
 	switch node {
 	case 1:
 		network = network01
+		com = com1
 		break
 	case 2:
 		network = network02
+		com = com2
 		break
 	case 3:
 		network = network03
+		com = com3
 		break
 	default:
 		fmt.Println("the serial number of node must be 1-3")
 		break
 	}
 	//开启端口
-	listen, err := net.Listen("tcp", network+"12345")
+	listen, err := net.Listen("tcp", network+com)
 	if err != nil {
 		fmt.Println("failed to listen: ", err)
 	}

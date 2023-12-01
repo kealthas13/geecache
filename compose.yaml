@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 networks:
   mynetwork:
     driver: bridge
@@ -11,6 +11,8 @@ services:
     container_name: geecache1
     ports:
       - 127.0.0.1:9527:8088
+    expose:
+      - 12345
     restart: always
     networks:
       mynetwork:
@@ -23,6 +25,8 @@ services:
     container_name: geecache2
     ports:
       - 127.0.0.1:9528:8088
+    expose:
+      - 12346
     restart: always
     networks:
       mynetwork:
@@ -35,6 +39,8 @@ services:
     container_name: geecache3
     ports:
       - 127.0.0.1:9529:8088
+    expose:
+      - 12347
     restart: always    
     networks:
       mynetwork:
@@ -42,4 +48,3 @@ services:
     tty: true
     environment:
       - node=3
-

@@ -24,23 +24,27 @@ type cacheHandler struct {
 
 // gRPC客户端,用于连接寻找其他节点服务端，用完即删
 func connect(key string, value string, h cacheHandler, Method string, i int) (string, string, string, int) {
-	var network string //选择网络
+	var com, network string //选择网络
+
 	switch i {
 	case 1:
 		network = network01
+		com = com1
 		break
 	case 2:
 		network = network02
+		com = com2
 		break
 	case 3:
 		network = network03
+		com = com3
 		break
 	default:
 		fmt.Println("the serial number of node must be 1-3")
 		break
 	}
 	//连接到server
-	connect, err := grpc.Dial(network+"12345", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	connect, err := grpc.Dial(network+com, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect:%v", err)
 	}
